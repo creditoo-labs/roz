@@ -14,6 +14,7 @@ class DefaultHikariConfig extends HikariConfig {
         addDataSourceProperty("password", password)
 
         addDataSourceProperty("useSSL", false)
+        addDataSourceProperty("allowPublicKeyRetrieval", true)
 
         setMinimumIdle(1)
         setUseDnsChecker(true)
