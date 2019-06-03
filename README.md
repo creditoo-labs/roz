@@ -5,7 +5,7 @@
 ![roz](roz.jpg "roz")
 
 
-### configurando no projeto
+### configurando o projeto
 
 no `build.gradle`, adicionar
 
