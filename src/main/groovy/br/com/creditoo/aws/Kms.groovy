@@ -12,8 +12,8 @@ class Kms {
 
     private AWSKMSClient awskmsClient = new AWSKMSClient()
 
-    String encrypt(byte[] value, String keyId) {
-        ByteBuffer buffer = ByteBuffer.wrap(value)
+    String encrypt(String value, String keyId) {
+        ByteBuffer buffer = ByteBuffer.wrap(value.bytes)
 
         EncryptRequest encryptRequest = new EncryptRequest().withKeyId(keyId).withPlaintext(buffer)
         EncryptResult encryptResult = awskmsClient.encrypt(encryptRequest)
