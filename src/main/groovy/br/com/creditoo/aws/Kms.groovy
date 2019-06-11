@@ -5,6 +5,8 @@ import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
 import com.amazonaws.services.kms.model.EncryptRequest
 import com.amazonaws.services.kms.model.EncryptResult
+import com.amazonaws.services.kms.model.GenerateDataKeyRequest
+import com.amazonaws.services.kms.model.GenerateDataKeyResult
 
 import java.nio.ByteBuffer
 
@@ -31,5 +33,15 @@ class Kms {
         String decryptedValue = new String(decryptResult.getPlaintext().array())
 
         return decryptedValue
+    }
+
+    String generateDataKey(String keyId, String keySpec = "AES_256") {
+        GenerateDataKeyRequest generateDataKeyRequest = new GenerateDataKeyRequest().withKeyId(keyId).withKeySpec(keySpec)
+
+        GenerateDataKeyResult generatedKeyResult = awskmsClient.generateDataKey(generateDataKeyRequest)
+
+        String  generatedKey = new String(generatedKeyResult.getCiphertextBlob().array())
+
+        return generatedKey
     }
 }
