@@ -1,5 +1,6 @@
 package br.com.creditoo.aws
 
+import br.com.creditoo.aws.responses.GenerateDataKeyResponse
 import com.amazonaws.services.kms.AWSKMSClient
 import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
@@ -19,7 +20,7 @@ class Kms {
 
         EncryptRequest encryptRequest = new EncryptRequest().withKeyId(keyId).withPlaintext(buffer)
         EncryptResult encryptResult = awskmsClient.encrypt(encryptRequest)
-        String encryptedValue = new String(Base64.getEncoder().encode(encryptResult.ciphertextBlob.array()))
+        String encryptedValue = this.getBase64String(encryptResult.ciphertextBlob)
 
         return encryptedValue
     }
@@ -35,13 +36,20 @@ class Kms {
         return decryptedValue
     }
 
-    String generateDataKey(String keyId, String keySpec = "AES_256") {
+    GenerateDataKeyResponse generateDataKey(String keyId, String keySpec = "AES_256") {
         GenerateDataKeyRequest generateDataKeyRequest = new GenerateDataKeyRequest().withKeyId(keyId).withKeySpec(keySpec)
 
         GenerateDataKeyResult generatedKeyResult = awskmsClient.generateDataKey(generateDataKeyRequest)
 
-        String  generatedKey = new String(generatedKeyResult.getPlaintext().array())
-
-        return generatedKey
+        return new GenerateDataKeyResponse(
+            this.getBase64String(generatedKeyResult.ciphertextBlob),
+            this.getBase64String(generatedKeyResult.plaintext)
+        )
     }
+
+    private String getBase64String(ByteBuffer data)
+    {
+        return new String(Base64.getEncoder().encode(data.array()))
+    }
+
 }
