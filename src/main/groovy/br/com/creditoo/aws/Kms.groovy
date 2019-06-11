@@ -40,7 +40,7 @@ class Kms {
 
         GenerateDataKeyResult generatedKeyResult = awskmsClient.generateDataKey(generateDataKeyRequest)
 
-        String  generatedKey = new String(generatedKeyResult.getCiphertextBlob().array())
+        String  generatedKey = new String(generatedKeyResult.getPlaintext().array())
 
         return generatedKey
     }
