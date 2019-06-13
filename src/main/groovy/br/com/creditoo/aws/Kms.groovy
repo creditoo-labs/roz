@@ -16,24 +16,35 @@ class Kms {
     private AWSKMSClient awskmsClient = new AWSKMSClient()
 
     String encrypt(String value, String keyId) {
-        ByteBuffer buffer = ByteBuffer.wrap(value.bytes)
+        byte[] encryptedData = encrypt(value.bytes, keyId)
+
+        return this.getBase64String(encryptedData)
+    }
+
+    byte[] encrypt(byte[] data, String keyId) {
+        ByteBuffer buffer = ByteBuffer.wrap(data)
 
         EncryptRequest encryptRequest = new EncryptRequest().withKeyId(keyId).withPlaintext(buffer)
         EncryptResult encryptResult = awskmsClient.encrypt(encryptRequest)
-        String encryptedValue = this.getBase64String(encryptResult.ciphertextBlob)
 
-        return encryptedValue
+        return encryptResult.ciphertextBlob
     }
 
     String decrypt(String encryptedValue) {
         byte[] cipherText = Base64.getDecoder().decode(encryptedValue)
-        ByteBuffer buffer = ByteBuffer.wrap(cipherText)
+
+        byte[] decryptedData = decrypt(cipherText)
+
+        return new String(decryptedData)
+    }
+
+    byte[] decrypt(byte[] encryptedData) {
+        ByteBuffer buffer = ByteBuffer.wrap(encryptedData)
 
         DecryptRequest decryptRequest = new DecryptRequest().withCiphertextBlob(buffer)
         DecryptResult decryptResult = awskmsClient.decrypt(decryptRequest)
-        String decryptedValue = new String(decryptResult.getPlaintext().array())
 
-        return decryptedValue
+        return decryptResult.getPlaintext().array()
     }
 
     GenerateDataKeyResponse generateDataKey(String keyId, String keySpec = "AES_256") {
