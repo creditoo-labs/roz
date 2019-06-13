@@ -33,18 +33,16 @@ class Kms {
     String decrypt(String encryptedValue) {
         byte[] cipherText = Base64.getDecoder().decode(encryptedValue)
 
-        byte[] decryptedData = decrypt(cipherText)
+        ByteBuffer decryptedData = decrypt(ByteBuffer.wrap(cipherText))
 
-        return new String(decryptedData)
+        return new String(decryptedData.array())
     }
 
-    byte[] decrypt(byte[] encryptedData) {
-        ByteBuffer buffer = ByteBuffer.wrap(encryptedData)
-
-        DecryptRequest decryptRequest = new DecryptRequest().withCiphertextBlob(buffer)
+    ByteBuffer decrypt(ByteBuffer encryptedData) {
+        DecryptRequest decryptRequest = new DecryptRequest().withCiphertextBlob(encryptedData)
         DecryptResult decryptResult = awskmsClient.decrypt(decryptRequest)
 
-        return decryptResult.getPlaintext().array()
+        return decryptResult.getPlaintext()
     }
 
     GenerateDataKeyResponse generateDataKey(String keyId, String keySpec = "AES_256") {
