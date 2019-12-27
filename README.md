@@ -38,7 +38,7 @@ o roz já traz uma implementação do HikariCP, caso queira utilizá-lo, pode re
 
 ### properties.json
 
-adicionar arquivo `application.json` na pasta `src/main/resources` com o seguinte formato
+adicionar arquivo `properties.json` na pasta `src/main/resources` com o seguinte formato
 
 	{
 	  "key-name": {
